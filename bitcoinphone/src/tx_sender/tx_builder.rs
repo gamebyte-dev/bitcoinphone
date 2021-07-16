@@ -4,8 +4,9 @@ use sv::messages::{Tx, TxIn, TxOut};
 use crate::util::traits::Signatory;
 use sv::transaction::sighash::{sighash, SigHashCache, SIGHASH_ANYONECANPAY, SIGHASH_ALL, SIGHASH_FORKID};
 use sv::transaction::p2pkh::{create_lock_script, create_unlock_script};
+use crate::tx_sender::MIN_DUST;
 
-pub const TX_FIXED_SIZE: usize = 8;
+pub const TX_FIXED_SIZE: i64 = 8;
 pub const P2PKH_INPUT_SIZE: usize = 157;
 pub const SATS_PER_KB: i64 = 500;
 
@@ -13,6 +14,7 @@ pub const SATS_PER_KB: i64 = 500;
 pub struct TxBuilder {
     total_funded_value: i64,
     bytes_added: i64,
+    used_amount: i64,
     outputs: Vec<(Script, i64)>,
     change_output: Option<Script>,
     locktime: u32
@@ -22,9 +24,10 @@ impl TxBuilder {
     pub fn new(locktime: u32, total_funded_value: i64) -> TxBuilder {
         return TxBuilder{
             total_funded_value,
-            bytes_added: 0,
+            bytes_added: TX_FIXED_SIZE,
             outputs: vec![],
             change_output: None,
+            used_amount: 0,
             locktime
         }
     }
@@ -51,6 +54,7 @@ impl TxBuilder {
         match amount {
             Some(amount) => {
                 self.outputs.push((script, amount));
+                self.used_amount += amount;
             },
             None => {
                 self.change_output = Some(script);
@@ -65,8 +69,7 @@ impl TxBuilder {
         inputs: &mut Vec<UTXO>,
         signatory: impl Signatory
     ) -> Tx {
-        let tx_bytes = (inputs.len() * P2PKH_INPUT_SIZE) + TX_FIXED_SIZE;
-        self.bytes_added += tx_bytes as i64;
+        self.bytes_added += (inputs.len() * P2PKH_INPUT_SIZE) as i64;
 
         let mut tx = self.construct_tx_without_inputs();
         Self::add_inputs_and_sign(&mut tx, inputs, signatory);
@@ -95,10 +98,14 @@ impl TxBuilder {
             return tx;
         }
 
-        let miner_fees = SATS_PER_KB * ((self.bytes_added / 1000) + 1);
-        let funded = self.total_funded_value;
+        let miner_fees = (self.bytes_added * SATS_PER_KB + SATS_PER_KB) / 1000;
+        let remainder = self.total_funded_value - self.used_amount - miner_fees;
+        if remainder < MIN_DUST {
+            return tx;
+        }
+
         tx.outputs.push(self.change_output.map(move |script| TxOut{
-            satoshis: funded - miner_fees,
+            satoshis: remainder,
             lock_script: script
         }).unwrap());
 

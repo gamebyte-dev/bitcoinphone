@@ -9,7 +9,7 @@ use crate::tx_sender::keys::{Wallet, KeyManager};
 use crate::tx_sender::TxSender;
 
 mod domain;
-mod phone;
+//mod phone;
 mod net;
 mod ui;
 mod util;
@@ -48,50 +48,3 @@ fn main() {
     //domain.run_phone();
 
 }
-
-
-
-/*
-mod phone;
-mod tx_factory;
-mod net;
-mod traits;
-mod key_factory;
-
-fn main () {
-
-    tx_factory::TxGateway::new();
-
-    let (sender, mic_receiver): (SyncSender<DataPacket>, Receiver<DataPacket>) = sync_channel(1000);
-    tx_gateway.update_data_sender(sender.clone());
-
-    let speaker_sender: SyncSender<DataPacket> = phone::Phone::new(PhoneConfig{
-        sample_rate: 8000.0,
-        frames_per_buffer: 8000,
-        jitter_delay_nanos: 1000
-    }, sender);
-
-    let tx_gateway_clone = tx_gateway.clone();
-    thread::spawn(move || loop {
-        match mic_receiver.recv() {
-            Ok(data) => {
-                println!("Sending mic data to tx tx_sender!");
-                tx_gateway_clone.send(data);
-            }
-            Err(e) => {
-                panic!("Weird mic error {}", e);
-            }
-        }
-    });
-
-    loop {
-        match network_data_receiver.recv() {
-            Ok(data) => {
-                speaker_sender.send(data).unwrap();
-            },
-            Err(e) => {
-                panic!("Error receiving mic data {}", e);
-            }
-        }
-    }
-}*/

@@ -36,23 +36,17 @@ dependencies = [
  "bincode",
  "chrono",
  "ctrlc",
+ "hex",
  "lazy_static",
  "lru-cache",
  "ntp",
  "pickledb",
- "portaudio",
  "rand 0.5.6",
  "secp256k1 0.20.3",
  "serde",
  "serde_yaml",
  "sv",
 ]
-
-[[package]]
-name = "bitflags"
-version = "0.8.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1370e9fc2a6ae53aea8b7a5110edbd08836ed87c88736dfabccade1c2b44bff4"
 
 [[package]]
 name = "bitflags"
@@ -119,7 +113,7 @@ version = "0.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ddfc5b9aa5d4507acaf872de71051dfd0e309860e88966e1051e462a077aac4f"
 dependencies = [
- "bitflags 1.2.1",
+ "bitflags",
 ]
 
 [[package]]
@@ -290,7 +284,7 @@ version = "0.20.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fa9b4819da1bc61c0ea48b63b7bc8604064dd43013e7cc325df098d49cd7c18a"
 dependencies = [
- "bitflags 1.2.1",
+ "bitflags",
  "cc",
  "cfg-if",
  "libc",
@@ -404,29 +398,6 @@ dependencies = [
  "serde_cbor",
  "serde_json",
  "serde_yaml",
-]
-
-[[package]]
-name = "pkg-config"
-version = "0.3.19"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3831453b3449ceb48b6d9c7ad7c96d5ea673e9b470a1dc578c2ce6521230884c"
-
-[[package]]
-name = "portaudio"
-version = "0.7.0"
-dependencies = [
- "bitflags 0.8.2",
- "libc",
- "num",
- "portaudio_sys",
-]
-
-[[package]]
-name = "portaudio_sys"
-version = "0.1.0"
-dependencies = [
- "pkg-config",
 ]
 
 [[package]]

@@ -25,7 +25,7 @@ pub struct KeyManager {
     curve: Secp256k1<All>,
     key_map: HashMap<KeyType, Key>,
 
-    wallet: Arc<Mutex<Wallet>>,
+    pub wallet: Arc<Mutex<Wallet>>,
 }
 
 impl KeyManager {
@@ -36,7 +36,9 @@ impl KeyManager {
             key_map: HashMap::new(),
             wallet
         };
+        println!("Setting up keys");
         manager.setup_keys();
+        println!("Key setup complete!");
 
         return manager;
     }
@@ -49,6 +51,7 @@ impl KeyManager {
     }
 
     pub fn setup_keys(&mut self) {
+        println!("We have {} keys", self.wallet.get_key_count());
         while self.wallet.get_key_count() < 2 {
             self.wallet.gen_key(&self.curve, &mut self.rng);
         }

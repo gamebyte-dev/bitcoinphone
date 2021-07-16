@@ -118,7 +118,6 @@ impl NetworkInterface {
         self.tx_bus_sender
             .send(TxEvent::AddPaymentOutput(create_lock_script(&key.pubkeyhash)))
             .unwrap();
-
     }
 
     pub fn subscribe_to_comms(&self, key: &Key) {
@@ -134,7 +133,9 @@ impl NetworkInterface {
     }
 
     pub(crate) fn broadcast(&self, tx: Tx) {
+        println!("TX: {}", hex::encode(tx.to_bytes()));
         let hash = tx.hash();
+        return;
         self.handler.clone().send(tx);
         self.peerman.clone().broadcast(Message::Inv(Inv{
             objects: vec![

@@ -5,9 +5,9 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use sv::script::Script;
 
-use crate::{phone, util};
+use crate::{util};
 use crate::net::NetworkInterface;
-use crate::phone::PhoneConfig;
+//use crate::phone::PhoneConfig;
 use crate::tx_sender::TxSender;
 use crate::util::constants::{CommunicationsKey, DataPacket, UIEvent, PaymentKey, Key};
 use crate::util::traits::Spawnable;
@@ -40,6 +40,7 @@ impl Domain {
     }
 
     pub fn start_processing(&mut self, packet: DataPacket) {
+        self.tx_sender.clone().get_utxos();
         match packet {
             DataPacket::UIEvent(UIEvent::Start{ output }) => {
                 self.peer_address = Script(output);
