@@ -53,6 +53,7 @@ impl Observer<PeerMessage> for MessageHandler {
                     .unwrap();
             }
             Message::Inv(inv) => {
+                println!("Got Inv!");
                 let mut waiting = self.waiting_cache.lock().unwrap();
 
                 let inv_vects = inv.objects.iter()
@@ -70,6 +71,7 @@ impl Observer<PeerMessage> for MessageHandler {
                 }));
             }
             Message::GetData(inv) => {
+                println!("Got GetData!");
                 for object in &inv.objects {
                     match self.out_cache.read().unwrap().get(&object.hash) {
                         Some(tx) => {
