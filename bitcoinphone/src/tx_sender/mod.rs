@@ -21,7 +21,7 @@ pub mod keys;
 pub const MIN_DUST: i64 = 500;
 pub const P2PKH_OUTPUT_SIZE: usize = 256;
 pub const SATS_PER_KB: i32 = 500;
-pub const MAX_BYTES_PER_PACKET: usize = 50000;
+pub const MAX_BYTES_PER_PACKET: usize = 5000;
 pub const MAXIMUM_PEERS: usize = 8;
 
 pub struct TxSender {
