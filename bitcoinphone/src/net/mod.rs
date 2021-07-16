@@ -133,9 +133,8 @@ impl NetworkInterface {
     }
 
     pub(crate) fn broadcast(&self, tx: Tx) {
-        println!("TX: {}", hex::encode(tx.to_bytes()));
+        println!("Debug: sending tx: {}", hex::encode(tx.to_bytes()));
         let hash = tx.hash();
-        return;
         self.handler.clone().send(tx);
         self.peerman.clone().broadcast(Message::Inv(Inv{
             objects: vec![
