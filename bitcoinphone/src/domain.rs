@@ -175,6 +175,7 @@ impl Domain {
     }*/
 
     fn get_jitter(mut jitters: Vec<Duration>, count: u64) -> u64 {
+        println!("durations: {:?}", jitters.clone().iter().map(|x| x.as_millis()).collect::<Vec<u128>>());
         let mut prev = jitters.remove(0);
         let mut delta_sum = Duration::from_secs(0);
         for current in jitters {
