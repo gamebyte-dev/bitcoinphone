@@ -80,6 +80,7 @@ impl PPeer {
     }
 
     pub fn send(&self, msg: &Message) {
-        self.sv_peer.send(msg);
+        self.sv_peer.send(msg)
+            .unwrap();
     }
 }
