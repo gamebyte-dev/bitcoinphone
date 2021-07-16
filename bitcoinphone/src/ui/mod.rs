@@ -5,6 +5,7 @@ use crate::tx_sender::keys::KeyManager;
 use sv::address::{addr_encode, AddressType, addr_decode};
 use sv::network::Network;
 use sv::util::Hash160;
+use sv::transaction::p2pkh::create_lock_script;
 
 mod events;
 
@@ -18,7 +19,7 @@ pub fn start(key_manager: KeyManager, sender: SyncSender<DataPacket>) {
         std::io::stdin().read_line(&mut address)
             .expect("unable to read from input");
 
-        let output = get_pubkeyhash(address).0.to_vec();
+        let output = create_lock_script(&get_pubkeyhash(address)).0;
         sender.send(DataPacket::UIEvent(UIEvent::Start{
             output
         }));

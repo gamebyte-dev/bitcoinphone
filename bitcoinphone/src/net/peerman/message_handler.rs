@@ -42,7 +42,7 @@ impl Observer<PeerMessage> for MessageHandler {
     fn next(&self, event: &PeerMessage) {
         match &event.message {
             Message::Ping(ping) => {
-                println!("Got ping!");
+                
                 event.peer.send(&Message::Pong(ping.clone()));
             }
             Message::Addr(addr) => {
@@ -51,13 +51,13 @@ impl Observer<PeerMessage> for MessageHandler {
                     .unwrap();
             }
             Message::Tx(tx) => {
-                println!("Got tx!");
+                
                 self.tx_bus
                     .send(TxEvent::RawTx(tx.clone()))
                     .unwrap();
             }
             Message::Inv(inv) => {
-                println!("Got Inv!");
+                
                 let mut waiting = self.waiting_cache.lock().unwrap();
 
                 let inv_vects = inv.objects.iter()
@@ -75,16 +75,14 @@ impl Observer<PeerMessage> for MessageHandler {
                 }));
             }
             Message::GetData(inv) => {
-                println!("Got GetData!");
                 for object in &inv.objects {
-                    println!("Looking for {:?}", object.hash.clone());
 
                     match self.out_cache.read().unwrap().get(&object.hash) {
                         Some(tx) => {
                             event.peer.send(&Message::Tx(tx.clone()));
                         },
                         None => {
-                            println!("Couldn't find...");
+                            
                         }
                     }
                 }

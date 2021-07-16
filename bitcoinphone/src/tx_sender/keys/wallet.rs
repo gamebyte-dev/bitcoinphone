@@ -161,6 +161,7 @@ impl Walletable for Arc<Mutex<Wallet>> {
             utxo_set.push(utxo);
         }
 
+        wallet.update_file();
         return Some(utxo_set);
     }
 }
