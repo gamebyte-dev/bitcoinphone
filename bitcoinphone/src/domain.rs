@@ -182,7 +182,7 @@ impl Domain {
             prev = current;
         }
 
-        return (delta_sum.as_millis() as u64 / count) - 250;
+        return (delta_sum.as_millis() as u64 / (count - 1)) - 250;
     }
 
     fn get_comms_output(&self) -> Vec<u8> {
