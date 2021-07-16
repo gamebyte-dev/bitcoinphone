@@ -77,11 +77,15 @@ impl Observer<PeerMessage> for MessageHandler {
             Message::GetData(inv) => {
                 println!("Got GetData!");
                 for object in &inv.objects {
+                    println!("Looking for {:?}", object.hash.clone());
+
                     match self.out_cache.read().unwrap().get(&object.hash) {
                         Some(tx) => {
                             event.peer.send(&Message::Tx(tx.clone()));
                         },
-                        None => {}
+                        None => {
+                            println!("Couldn't find...");
+                        }
                     }
                 }
             },
