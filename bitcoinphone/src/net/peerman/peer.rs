@@ -53,6 +53,7 @@ impl PPeer {
         if !sv_peer.connected() {
             return None;
         }
+
         println!("Connected to peer {}:{}!", ip, port);
         sv_peer.send(&Message::FilterLoad(FilterLoad{
             bloom_filter,
@@ -80,7 +81,6 @@ impl PPeer {
     }
 
     pub fn send(&self, msg: &Message) {
-        self.sv_peer.send(msg)
-            .unwrap();
+        self.sv_peer.send(msg);
     }
 }

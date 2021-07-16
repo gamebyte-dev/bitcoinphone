@@ -44,9 +44,9 @@ impl TxSender {
         );
 
         println!("Attempting to connect to {}, peers..", MAXIMUM_PEERS);
-        network_interface.connect(MAXIMUM_PEERS);
         network_interface.subscribe_to_payments(&key_manager.get_key(PaymentKey));
         network_interface.subscribe_to_comms(&key_manager.get_key(CommunicationsKey));
+        network_interface.connect(MAXIMUM_PEERS);
         println!("Connected to peers!");
 
         return Arc::from(TxSender{

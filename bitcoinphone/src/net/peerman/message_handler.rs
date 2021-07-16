@@ -41,6 +41,10 @@ impl MessageHandler {
 impl Observer<PeerMessage> for MessageHandler {
     fn next(&self, event: &PeerMessage) {
         match &event.message {
+            Message::Ping(ping) => {
+                println!("Got ping!");
+                event.peer.send(&Message::Pong(ping.clone()));
+            }
             Message::Addr(addr) => {
                 self.addr_bus
                     .send(AddrEvent::AddrMessage(addr.clone()))
