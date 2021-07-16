@@ -1,0 +1,18 @@
+env:
+    - LD_LIBRARY_PATH=/usr/local/lib
+language: rust
+rust:
+    - nightly
+    - stable
+os:
+    - linux
+notifications:
+  email:
+    - letang.jeremy@gmail.com
+    - mitchell.nordine@gmail.com
+before_script:
+    - rustup component add rustfmt
+script:
+    - cargo build --verbose
+    - cargo test --verbose
+    - cargo fmt -- --check

@@ -1,0 +1,25 @@
+[package]
+name = "bitcoinphone"
+version = "0.1.0"
+authors = ["joe"]
+edition = "2018"
+
+# See more tx_sender.keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+portaudio = {path = "../rust-portaudio"}
+ntp = "0.5"
+serde = { version = "1.0", features = ["derive"] }
+serde_yaml = "0.8"
+chrono = "0.4.4"
+bincode = "1.0"
+sv = { path="../rust-sv" }
+pickledb = "0.4.1"
+lru-cache = "0.1.2"
+lazy_static = "1.4.0"
+rand = "0.5.0"
+secp256k1={ version = "0.20.0", features = ['rand', 'serde']}
+ctrlc = "3.1.9"
+
+[build]
+rustflags = ["-Awarnings"]
