@@ -87,13 +87,11 @@ impl Domain {
             .expect("Errored out waiting for startACK");
 
         if let DataPacket::StartAck{sync_count, ..} = data_packet.clone() {
-
+            self.start_sync(SYNC_CLICKS);
+            let jitter = self.wait_sync(sync_count);
         }  else {
             panic!("Expected start-ack got something else {:?} ", data_packet);
         }
-
-        self.start_sync(SYNC_CLICKS);
-        let jitter = self.wait_sync(sync_count);
     }
 
     fn start_sync(&self, max_syncs: u64) {
@@ -133,9 +131,9 @@ impl Domain {
         }
 
         let jitter = Self::get_jitter(timeouts, expected_syncs + 1);
-        println!("Calculated network jitter: {} ms", jitter.as_millis());
+        println!("Calculated network jitter: {} ms", jitter);
 
-        return 2 * (jitter as u64);
+        return 2 * jitter;
     }
 /*
     pub fn run_phone(&mut self, jitter_delay_nanos: u64) {
@@ -176,7 +174,7 @@ impl Domain {
         }
     }*/
 
-    fn get_jitter(mut jitters: Vec<Duration>, count: u64) -> u128 {
+    fn get_jitter(mut jitters: Vec<Duration>, count: u64) -> u64 {
         let mut prev = jitters.remove(0);
         let mut delta_sum = Duration::from_secs(0);
         for current in jitters {
@@ -184,7 +182,7 @@ impl Domain {
             prev = current;
         }
 
-        return (delta_sum.as_millis() / count) - 250;
+        return (delta_sum.as_millis() as u64 / count) - 250;
     }
 
     fn get_comms_output(&self) -> Vec<u8> {
