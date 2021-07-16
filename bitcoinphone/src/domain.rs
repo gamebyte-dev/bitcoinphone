@@ -45,10 +45,12 @@ impl Domain {
             DataPacket::UIEvent(UIEvent::Start{ output }) => {
                 self.peer_address = Script(output);
                 self.run_sender();
+                println!("running phone!");
             }
             DataPacket::Start { output, sync_count } => {
                 self.peer_address = Script(output);
                 self.run_receiver(sync_count);
+                println!("running phone!");
             }
             _ => {
                 println!("Received invalid starting packet.")
@@ -66,9 +68,8 @@ impl Domain {
                 },
                 self.peer_address.clone()
             );
-        let jitter = self.wait_sync();
+        let jitter = self.wait_sync(sync_count);
         self.start_sync(SYNC_CLICKS);
-        self.wait_sync();
     }
 
     fn run_sender(&mut self) {
@@ -85,13 +86,14 @@ impl Domain {
         let data_packet = self.network_receiver.recv_timeout(Duration::from_secs(10))
             .expect("Errored out waiting for startACK");
 
-        if let DataPacket::StartAck{..} = data_packet.clone() {}
-        else {
+        if let DataPacket::StartAck{sync_count, ..} = data_packet.clone() {
+
+        }  else {
             panic!("Expected start-ack got something else {:?} ", data_packet);
         }
 
-        self.start_sync(4);
-        let jitter = self.wait_sync();
+        self.start_sync(SYNC_CLICKS);
+        let jitter = self.wait_sync(sync_count);
     }
 
     fn start_sync(&self, max_syncs: u64) {
@@ -106,7 +108,7 @@ impl Domain {
         }
     }
 
-    fn wait_sync(&self) -> u64 {
+    fn wait_sync(&self, expected_syncs: u64) -> u64 {
         println!("Starting waiting algorithm.");
         let mut timeouts = vec![];
 
@@ -130,10 +132,10 @@ impl Domain {
             }
         }
 
-        let jitter = Self::get_jitter(timeouts);
+        let jitter = Self::get_jitter(timeouts, expected_syncs + 1);
         println!("Calculated network jitter: {} ms", jitter.as_millis());
 
-        return (2 * jitter.as_nanos()) as u64;
+        return 2 * (jitter as u64);
     }
 /*
     pub fn run_phone(&mut self, jitter_delay_nanos: u64) {
@@ -174,7 +176,7 @@ impl Domain {
         }
     }*/
 
-    fn get_jitter(mut jitters: Vec<Duration>) -> Duration {
+    fn get_jitter(mut jitters: Vec<Duration>, count: u64) -> u128 {
         let mut prev = jitters.remove(0);
         let mut delta_sum = Duration::from_secs(0);
         for current in jitters {
@@ -182,7 +184,7 @@ impl Domain {
             prev = current;
         }
 
-        return prev;
+        return (delta_sum.as_millis() / count) - 250;
     }
 
     fn get_comms_output(&self) -> Vec<u8> {
