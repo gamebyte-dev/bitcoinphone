@@ -44,14 +44,15 @@ impl Domain {
         match packet {
             DataPacket::UIEvent(UIEvent::Start{ output }) => {
                 self.peer_address = Script(output);
-                //self.run_sender();
-                self.run_phone(100);
-                println!("running phone!");
+                self.run_sender();
+                println!("Sync finished, running phone!");
+                self.run_phone(100000000);
             }
             DataPacket::Start { output, sync_count } => {
                 self.peer_address = Script(output);
                 self.run_receiver(sync_count);
-                println!("running phone!");
+                println!("Sync finished, running phone!");
+                self.run_phone(100000000);
             }
             _ => {
                 println!("Received invalid starting packet.")
