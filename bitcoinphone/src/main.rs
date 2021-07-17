@@ -9,7 +9,7 @@ use crate::tx_sender::keys::{Wallet, KeyManager};
 use crate::tx_sender::TxSender;
 
 mod domain;
-//mod phone;
+mod phone;
 mod net;
 mod ui;
 mod util;

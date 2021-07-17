@@ -7,7 +7,7 @@ edition = "2018"
 # See more tx_sender.keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-#portaudio = {path = "../rust-portaudio"}
+portaudio = {path = "../rust-portaudio"}
 hex = "0.3"
 ntp = "0.5"
 serde = { version = "1.0", features = ["derive"] }

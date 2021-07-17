@@ -5,9 +5,9 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use sv::script::Script;
 
-use crate::{util};
+use crate::{util, phone};
 use crate::net::NetworkInterface;
-//use crate::phone::PhoneConfig;
+use crate::phone::PhoneConfig;
 use crate::tx_sender::TxSender;
 use crate::util::constants::{CommunicationsKey, DataPacket, UIEvent, PaymentKey, Key};
 use crate::util::traits::Spawnable;
@@ -44,7 +44,8 @@ impl Domain {
         match packet {
             DataPacket::UIEvent(UIEvent::Start{ output }) => {
                 self.peer_address = Script(output);
-                self.run_sender();
+                //self.run_sender();
+                self.run_phone(100);
                 println!("running phone!");
             }
             DataPacket::Start { output, sync_count } => {
@@ -135,25 +136,24 @@ impl Domain {
 
         return 2 * jitter;
     }
-/*
+
     pub fn run_phone(&mut self, jitter_delay_nanos: u64) {
         // Move tx_sender out of the struct since we need it in a seperate thread.
-        let moved_gateway = std::mem::replace(&mut self.tx_gateway, None)
-            .unwrap();
-        let address = self.connection_address;
+        let cloned_sender = self.tx_sender.clone();
+        let address = self.peer_address.clone();
 
         let (mic_sender, mic_receiver) = sync_channel(1000);
         let speaker_sender = phone::Phone::new(PhoneConfig{
-            sample_rate: 8000.0,
-            frames_per_buffer: 8000,
+            sample_rate: 44100.0,
+            frames_per_buffer: 44100,
             jitter_delay_nanos
         }, mic_sender);
 
         thread::spawn(move || loop {
             match mic_receiver.recv() {
                 Ok(packet) => {
-                    moved_gateway
-                        .send_data(packet, address)
+                    cloned_sender.clone()
+                        .send_data(packet, address.clone())
                 },
                 Err(_) => {
                     panic!("Got error from mic!");
@@ -172,7 +172,7 @@ impl Domain {
                 }
             }
         }
-    }*/
+    }
 
     fn get_jitter(mut jitters: Vec<Duration>, count: u64) -> u64 {
         println!("durations: {:?}", jitters.clone().iter().map(|x| x.as_millis()).collect::<Vec<u128>>());

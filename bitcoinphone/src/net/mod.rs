@@ -133,7 +133,7 @@ impl NetworkInterface {
     }
 
     pub(crate) fn broadcast(&self, tx: Tx) {
-        println!("Sending TX: {} ", tx.hash().encode());
+        println!("Sending TX: {} ", hex::encode(tx.to_bytes()));
         let hash = tx.hash();
         self.handler.clone().send(tx);
         self.peerman.clone().broadcast(Message::Inv(Inv{

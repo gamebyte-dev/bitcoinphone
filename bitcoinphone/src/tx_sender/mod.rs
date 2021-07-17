@@ -21,7 +21,7 @@ pub mod keys;
 pub const MIN_DUST: i64 = 500;
 pub const P2PKH_OUTPUT_SIZE: usize = 256;
 pub const SATS_PER_KB: i32 = 500;
-pub const MAX_BYTES_PER_PACKET: usize = 5000;
+pub const MAX_BYTES_PER_PACKET: usize = 50000;
 pub const MAXIMUM_PEERS: usize = 8;
 
 pub struct TxSender {
@@ -61,8 +61,9 @@ impl TxSender {
     }
 
     pub fn get_utxos(self: Arc<Self>) {
+        let sats_needed =  (MAX_BYTES_PER_PACKET as i32 * SATS_PER_KB + SATS_PER_KB) / 1000;
         let utxo_set = self.key_manager.wallet
-            .get_utxo_set(MAX_BYTES_PER_PACKET as i64);
+            .get_utxo_set(sats_needed as i64);
 
         if utxo_set.is_none() {
             println!("You need to fund your address!");
