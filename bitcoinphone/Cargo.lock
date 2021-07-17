@@ -184,6 +184,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "force_remove"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "306c3356020a0158e711d2ff2f38636c14e37628b04e63fd376e6caf8bb8b6a7"
+
+[[package]]
 name = "fuchsia-cprng"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -427,6 +433,7 @@ dependencies = [
 name = "portaudio_sys"
 version = "0.1.0"
 dependencies = [
+ "force_remove",
  "pkg-config",
 ]
 

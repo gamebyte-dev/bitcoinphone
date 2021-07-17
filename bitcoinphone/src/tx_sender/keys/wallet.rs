@@ -153,8 +153,7 @@ impl Walletable for Arc<Mutex<Wallet>> {
 
         while computed < amount {
             if wallet.utxos.is_empty() {
-                wallet.utxos.append(&mut utxo_set);
-                return None;
+                break;
             }
             let utxo = wallet.utxos.remove(0);
             computed += utxo.sats;

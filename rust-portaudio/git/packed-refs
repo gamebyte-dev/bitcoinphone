@@ -1,0 +1,7 @@
+# pack-refs with: peeled fully-peeled sorted 
+a5b0fb4a41d6dd21aa6929e5b4b51bf480bf4c06 refs/remotes/origin/add_examples
+e3a9768d143b8e6437cbc25c01cf8901be407a22 refs/remotes/origin/build-cfg
+4cf2dcd483fdbe19d06fefdc926be5fbf989dc2d refs/remotes/origin/gh-pages
+9b7dfad9f15cf136c7e739f021f194663cabc680 refs/remotes/origin/master
+b88d8486d3f92c7dce3ad9be3ab74b594bc99df9 refs/remotes/origin/small-refactor
+c0851fb243df4675e4426aa291aa08aff4a8d817 refs/remotes/origin/stream-type-parameter
