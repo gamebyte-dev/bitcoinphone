@@ -46,13 +46,13 @@ impl Domain {
                 self.peer_address = Script(output);
                 self.run_sender();
                 println!("Sync finished, running phone!");
-                self.run_phone(100000000);
+                self.run_phone(500000000);
             }
             DataPacket::Start { output, sync_count } => {
                 self.peer_address = Script(output);
                 self.run_receiver(sync_count);
                 println!("Sync finished, running phone!");
-                self.run_phone(100000000);
+                self.run_phone(500000000);
             }
             _ => {
                 println!("Received invalid starting packet.")
