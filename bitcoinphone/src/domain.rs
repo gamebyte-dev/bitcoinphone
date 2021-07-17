@@ -145,8 +145,8 @@ impl Domain {
 
         let (mic_sender, mic_receiver) = sync_channel(1000);
         let speaker_sender = phone::Phone::new(PhoneConfig{
-            sample_rate: 8000.0,
-            frames_per_buffer: 8000,
+            sample_rate: 44100.0,
+            frames_per_buffer: 44100,
             jitter_delay_nanos
         }, mic_sender);
 

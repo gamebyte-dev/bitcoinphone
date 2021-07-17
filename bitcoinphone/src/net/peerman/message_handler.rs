@@ -35,10 +35,6 @@ impl MessageHandler {
             .write()
             .unwrap()
             .insert(tx.hash(), tx);
-        self.waiting_cache
-            .lock()
-            .unwrap()
-            .insert(tx.hash(), ());
     }
 }
 
@@ -61,12 +57,13 @@ impl Observer<PeerMessage> for MessageHandler {
                     .unwrap();
             }
             Message::Inv(inv) => {
-                
+                let mut out_cache = self.out_cache.read().unwrap();
                 let mut waiting = self.waiting_cache.lock().unwrap();
 
                 let inv_vects = inv.objects.iter()
                     .filter_map(|x| if x.obj_type == INV_VECT_TX
-                        && !waiting.contains_key(&x.hash) {
+                        && !waiting.contains_key(&x.hash)
+                        && !out_cache.contains_key(&x.hash) {
                         waiting.insert(x.clone().hash, ());
                         Some(x.clone())
                     } else {
