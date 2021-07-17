@@ -35,6 +35,10 @@ impl MessageHandler {
             .write()
             .unwrap()
             .insert(tx.hash(), tx);
+        self.waiting_cache
+            .lock()
+            .unwrap()
+            .insert(tx.hash(), ());
     }
 }
 
